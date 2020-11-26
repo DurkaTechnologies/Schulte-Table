@@ -23,69 +23,54 @@ namespace Schulte
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private int seconds;
-		private int minutes;
-
-		Style style;
-		Style incorrect;
+		Style correctStyle;
+		Style incorrectStyle;
+		Time currectTime;
+		Time minTime;
 		private int size;
-		private int quantity;
 		private Int32Point center;
 		int currentNum;
+		int correctClicks;
+		int wrongClicks;
+
+
 		DispatcherTimer gameTimer;
-		ColorAnimation animation1;
-		ColorAnimation animation2;
 		public MainWindow()
 		{
 			InitializeComponent();
-			seconds = 0;
-			minutes = 0;
 			gameTimer = new DispatcherTimer();
 			gameTimer.Tick += new EventHandler(timer_Tick);
 			gameTimer.Interval = new TimeSpan(0, 0, 1);
-			currentNum = 0;
-			Random random = new Random();
-			
-			style = new Style();
-			style = TryFindResource("numStyle") as Style;
-			incorrect = TryFindResource("marginStyle") as Style; 
-			style.Setters.Add(new EventSetter { Event = Button.ClickEvent, Handler = new RoutedEventHandler(Button_Click) });
-			incorrect.Setters.Add(new EventSetter { Event = Button.ClickEvent, Handler = new RoutedEventHandler(Button_Click) });
+			SetStartValues();
+			currectTime = new Time();
+			if (!InitializeStyles())
+				this.Close();
 
-			animation1 = new ColorAnimation();
-			//animation1.From = Color.FromRgb(216, 84, 174);
-			animation1.To = Colors.Red;
-			animation1.Duration = TimeSpan.FromMilliseconds(500);
-
-			 animation2 = new ColorAnimation();
-			//animation1.From = Color.FromRgb(216, 84, 174);
-			animation2.To = Color.FromRgb(216, 84, 174);
-			animation2.Duration = TimeSpan.FromMilliseconds(500);
 			CreateGrid();
-
 			CountCenter();
 			FillGrid();
-
-			Border border = new Border();
-			border.Child = new Image();
-			var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(Resource.eye.GetHbitmap(),
-								  IntPtr.Zero,
-								  Int32Rect.Empty,
-								  BitmapSizeOptions.FromEmptyOptions());
-			(border.Child as Image).Source  = bitmapSource;
-			//border.Style = style;
-			Grid.Children.Add(border);
-			Grid.SetColumn(border, center.X);
-			Grid.SetRow(border, center.Y);
+			SetCenterElement();
 
 			this.bar.Maximum = (size * size) - 1;
+		}
+
+		private bool InitializeStyles()
+		{
+			correctStyle = TryFindResource("pressStyle") as Style;
+			if (correctStyle == null)
+				return false;
+			incorrectStyle = TryFindResource("marginStyle") as Style;
+
+			if (incorrectStyle == null)
+				return false;
+			return true;
 
 		}
 
 		private void CreateGrid()
 		{
-				Grid.ColumnDefinitions.Clear();
-				Grid.RowDefinitions.Clear();
+			Grid.ColumnDefinitions.Clear();
+			Grid.RowDefinitions.Clear();
 			Grid.Children.Clear();
 			size = (int)this.slider.Value;
 
@@ -101,7 +86,8 @@ namespace Schulte
 			
 			Random random = new Random();
 			int num;
-			Button btn;
+			Border btn;
+			TextBlock btnText;
 			List<int> numbers = new List<int> { };
 			for (int i = 1; i < (size * size); i++)
 				numbers.Add(i);
@@ -113,21 +99,19 @@ namespace Schulte
 					if ((center.X == i) && (center.Y == j))
 						continue;
 
-					btn = new Button();
+					btn = new Border();
+					btnText = new TextBlock();
+					btnText.VerticalAlignment = VerticalAlignment.Center;
 					num = numbers[random.Next(0, numbers.Count)];
-					btn.Content = num;
+					btnText.Text = num.ToString();
+					btn.Child = btnText;
 					numbers.Remove(num);
-					btn.Style = style;
+					btn.Style = correctStyle;
 					Grid.Children.Add(btn);
 					Grid.SetColumn(btn, i);
 					Grid.SetRow(btn, j);
 				}
 			}
-			
-		}
-		private void myanim_Completed(object sender, EventArgs e)
-		{
-
 		}
 
 		private void SetCenterElement()
@@ -139,35 +123,16 @@ namespace Schulte
 								  Int32Rect.Empty,
 								  BitmapSizeOptions.FromEmptyOptions());
 			(border.Child as Image).Source = bitmapSource;
-			//border.Style = style;
+			border.Style = TryFindResource("baseStyle") as Style;
 			Grid.Children.Add(border);
 			Grid.SetColumn(border, center.X);
 			Grid.SetRow(border, center.Y);
 		}
 
-		private void SetStyle(string styleKey)
-		{
-			style = TryFindResource("numStyle") as Style;
-			if (style == null)
-			{
-				
-				style = new Style();
-				MessageBox.Show("Incorrect style", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-			}
-		}
-
 		void timer_Tick(object sender, EventArgs e)
 		{
-			++seconds;
-			if (seconds % 60 == 0)
-			{
-				minutes++;
-				seconds = 0;
-				timer.Text = (minutes < 10 ? $"0{minutes}" : $"{minutes}") + ":00";
-			}
-			else
-				timer.Text = (minutes < 10 ? $"0{minutes}" : $"{minutes}") + ':'
-					+ (seconds < 10 ? $"0{seconds}" : $"{seconds}");
+			currectTime.AddSecond();
+			timer.Text = currectTime.Text;
 		}
 
 		public void CountCenter()
@@ -176,38 +141,96 @@ namespace Schulte
 
 			center = new Int32Point(position - 1, position - 1);
 		}
-	
-		private void Button_Click(object sender, RoutedEventArgs e)
+		private void Border_MouseUp(object sender, MouseButtonEventArgs e)
+		{
+			restartBtn.IsEnabled = false;
+		}
+		private void Border_MouseDown(object sender, MouseButtonEventArgs e)
 		{
 			if (currentNum == 0)
-				gameTimer.Start();
-			Button current = sender as Button;
-			int thisButtonNum = int.Parse(current.Content.ToString());
-			if (currentNum+1 == thisButtonNum)
 			{
-				current.Style = style;
+				gameTimer.Start();
+				slider.IsEnabled = false;
+				restartBtn.IsEnabled = true;
+				restartBtn.BorderThickness = new Thickness(0, 0, 0, 6);
+				restartBtn.Margin = new Thickness(20, 0, 20, 10);
+				restartBtn.MouseUp -= Border_MouseUp;
+
+			}
+			Border current = sender as Border;
+			int thisButtonNum = int.Parse((current.Child as TextBlock)?.Text);
+			if (currentNum + 1 == thisButtonNum)
+			{
+				correctClicks++;
+				correctClicksText.Text = correctClicks.ToString();
+
+				current.Style = correctStyle;
 				currentNum++;
 				current.IsEnabled = false;
 				this.bar.Value++;
-				current.BorderThickness = new Thickness(0);
-				current.Margin = new Thickness(3,6,3,3);
+				current.Background = current.BorderBrush;
+				CheckWin();
 			}
 			else
-				current.Style = incorrect;
+			{
+				wrongClicks++;
+				wrongClicksText.Text = wrongClicks.ToString();
+				current.Style = incorrectStyle;
+			}
 		}
 
-
+		private void CheckWin()
+		{
+			if (currentNum == (size*size) - 1)
+			{
+				gameTimer.Stop();
+				slider.IsEnabled = true;
+				if (minTime.IsReset())
+					minTime = currectTime;
+				else if (minTime >= currectTime)
+					minTime = currectTime;
+				recordTime.Text = minTime.Text;
+				MessageBox.Show("YOU WIN", "WIN", MessageBoxButton.OK, MessageBoxImage.None);
+			}
+		}
 
 		private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
 		{
 			if (Grid == null)
 				return;
-			this.bar.Maximum = (size * size) - 1;
+			this.bar.Value = 0;
 			CreateGrid();
 			CountCenter();
-
 			FillGrid();
 			SetCenterElement();
+			minTime.ResetTime();
+			recordTime.Text = minTime.Text;
+			this.bar.Maximum = (size * size) - 1;
+
+		}
+
+		private void Restart_MouseDown(object sender, MouseButtonEventArgs e)
+		{
+			gameTimer.Stop();
+			SetStartValues();
+			bar.Value = 0;
+			CreateGrid();
+			CountCenter();
+			FillGrid();
+			SetCenterElement();
+			restartBtn.MouseUp += Border_MouseUp;
+
+			slider.IsEnabled = true;
+
+		}
+
+		private void SetStartValues()
+		{
+			currectTime.ResetTime();
+			correctClicks = 0;
+			wrongClicks = 0;
+			currentNum = 0;
+			timer.Text = "00:00";
 		}
 	}
 
@@ -222,74 +245,73 @@ namespace Schulte
 		public int X { get; set; }
 		public int Y { get; set; }
 	}
-	
-	public class GameBoard
+
+	public struct Time
 	{
-		public GameBoard(int size, string stylekey)
+		public Time(int seconds = 0)
 		{
-			Size = size;
-			CountCenter();
-			style = new Style();
-
-		}
-		public GameBoard(int size, ref Grid grid, Style style)
-		{
-			Size = size;
-			CountCenter();
-			this.style = style;
+			Seconds = seconds;
+			Minutes = 0;
+			Text = "00:00";
 		}
 
-		private int size;
-		private Int32Point center;
-		Style style;
-		int currentNum;
-
-		public int Size
-		{ 
-			get => size; 
-			set => size = (value > 2) && (value % 2 != 0) ? value : 5; 
-		}
-
-		public Int32Point Center => center;
-
-		//public void SetGrid(ref Grid grid)
-		//{
-		//	if (grid == null)
-		//		MessageBox.Show("Grid is null", "Error", MessageBoxButton.OKCancel, MessageBoxImage.Error);
-		//	else
-		//		this.grid = grid;
-		//}
-
-		public void CountCenter()
+		public void ResetTime()
 		{
-			int positionX = size - size / 2;
-
-			center = new Int32Point(size - 1, size - 1);
+			Seconds = 0;
+			Minutes = 0;
+			Text = "00:00";
 		}
-
-		public void CreateButtons()
+		public bool IsReset()
 		{
-			int [] numbers = new int[] { };
-			for (int i = 1; i < (size * size); i++)
+			return ((Seconds == 0) && (Minutes == 0));
+		}
+		public int Seconds { get; set; }
+		public int Minutes { get; set; }
+		public string Text { get; set; }
+
+		public void AddSecond()
+		{
+			++Seconds;
+			if (Seconds % 60 == 0)
 			{
-				Array.Resize(ref numbers, numbers.Length + 1);
-				numbers[i] = i + 1;
+				Minutes++;
+				Seconds = 0;
+				Text = (Minutes < 10 ? $"0{Minutes}" : $"{Minutes}") + ":00";
 			}
+			else
+				Text = (Minutes < 10 ? $"0{Minutes}" : $"{Minutes}") + ':'
+					+ (Seconds < 10 ? $"0{Seconds}" : $"{Seconds}");
 
-			Random random = new Random();
+		}
 
-			for (int i = 0; i < size; i++)
-			{
-				for (int j = 0; j < size; j++)
-				{
-					if ((center.X == size) && (center.Y == size))
-						continue;
+		public override string ToString()
+		{
+			return Text;
+		}
+		public static bool operator <=(Time left, Time right)
+		{
+			if (left.Minutes < right.Minutes)
+				return true;
+			else if (left.Minutes == right.Minutes)
+				return left.Seconds <= right.Seconds;
+			else
+				return false;
 
-				}
-			}
+		}
+		public static bool operator >=(Time left, Time right)
+		{
+			if (left.Minutes > right.Minutes)
+				return true;
+			else if (left.Minutes == right.Minutes)
+				return left.Seconds >= right.Seconds;
+			else
+				return false;
+
 		}
 
 	}
+
+
 }
 
 
