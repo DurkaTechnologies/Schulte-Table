@@ -5,11 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Schulte"
         mc:Ignorable="d"
-        MinHeight="500" MinWidth="800"
-        Title="Шульте" Height="500" Width="800"
+        MinHeight="600" MinWidth="500"
+    
+        Title="Шульте"
        >
     <Window.Resources>
-        <Style  x:Key="baseStyle" TargetType="{x:Type Border}">
+        <ResourceDictionary >
+
+            <ResourceDictionary.MergedDictionaries >
+                <ResourceDictionary x:Name="salo" Source="Resources/Dictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <Style  x:Key="baseStyle" TargetType="{x:Type Border}">
             <Setter Property="Margin" Value="3" ></Setter>
             <Setter Property="BorderThickness" Value="0,0,0,6"></Setter>
             <Setter Property="Background" Value="#FFD854AE"></Setter>
@@ -59,10 +66,11 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="pressStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource baseStyle}"  >
+        <!--<Style x:Key="pressStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource baseStyle}"  >
             <EventSetter Event="MouseDown" Handler="Border_MouseDown"/>
             <Style.Triggers>
-                <EventTrigger RoutedEvent="MouseDown" >
+                
+                    <EventTrigger RoutedEvent="MouseDown" >
                     <EventTrigger.Actions>
                         <BeginStoryboard>
                             <Storyboard>
@@ -92,6 +100,7 @@
                         </BeginStoryboard>
                     </EventTrigger.Actions>
                 </EventTrigger>
+                
             </Style.Triggers>
         </Style>
         
@@ -124,12 +133,15 @@
                     </EventTrigger.Actions>
                 </EventTrigger>
             </Style.Triggers>
-        </Style>
+        </Style>-->
+
+        
+        </ResourceDictionary>
     </Window.Resources>
 
-    <Grid Background="#FF51004A" >
+    <!--<Grid Background="#FF51004A" >-->
 
-        <Grid.ColumnDefinitions>
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="380*"/>
             <ColumnDefinition Width="380*"/>
             <ColumnDefinition Width="30*"/>
@@ -143,9 +155,9 @@
             <RowDefinition Height="50*"/>
 
         </Grid.RowDefinitions>
-        <Image  Grid.Row="1" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" Source="timer.png" />
+        <Image  Grid.Row="1" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/timer.png" />
         <TextBlock x:Name="timer" Grid.Row="2" Text="00:00" FontSize="30" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+        --><!--<Button Template="{StaticResource btnTemplate }" ></Button>--><!--
         <UniformGrid Grid.Row="3" Rows="4">
             <Border x:Name="restartBtn"  Style="{StaticResource pressAnimStyle}" MouseDown="Restart_MouseDown" Margin="20, 0 ,20, 10" >
                 <TextBlock VerticalAlignment="Center">Restart</TextBlock>
@@ -186,7 +198,9 @@
         </DockPanel>
         <ProgressBar x:Name="bar" Grid.Row="4" Grid.Column=" 1" Margin="0, 20, 0 , 20" Foreground="#FFB80CC9" BorderBrush="Black" Background="White"/>
 
+    </Grid>-->
+        <Grid>
+        <Frame x:Name="MainWindowFrame" NavigationUIVisibility="Hidden" Source="MainMenu.xaml" />
     </Grid>
-
 
 </Window>
