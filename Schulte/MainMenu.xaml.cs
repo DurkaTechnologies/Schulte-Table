@@ -21,25 +21,31 @@ namespace Schulte
 	/// </summary>
 	public partial class MainMenu : Page
 	{
-		private MainMenuModel viewModel = new MainMenuModel();
 
 		public MainMenu()
 		{
 			InitializeComponent();
+			//Navigation.Navigation.Service = NavigationService.GetNavigationService(this);
 
-			this.DataContext = viewModel;
-
+			//this.DataContext = new MainMenuModel(); ;
 		}
 
-		public static MainMenu GetMainMenu()
+		private void Page_Loaded(object sender, RoutedEventArgs e)
 		{
-			return new MainMenu();
+			Navigation.Navigation.Service = NavigationService.GetNavigationService(this);
+
+			this.DataContext = new MainMenuModel();
 		}
 
-		private void RoundButton_Click(object sender, RoutedEventArgs e)
-		{
-			NavigationService nav = NavigationService.GetNavigationService(this);
-			nav.Navigate(new Uri("GamePage.xaml", UriKind.RelativeOrAbsolute));
-		}
+		//public static MainMenu GetMainMenu()
+		//{
+		//	return new MainMenu();
+		//}
+
+		//private void RoundButton_Click(object sender, RoutedEventArgs e)
+		//{
+		//	NavigationService nav = NavigationService.GetNavigationService(this);
+		//	nav.Navigate(new Uri("GamePage.xaml", UriKind.RelativeOrAbsolute));
+		//}
 	}
 }
