@@ -1,95 +1,110 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Schulte.UserControls
 {
-	/// <summary>
-	/// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
-	///
-	/// Step 1a) Using this custom control in a XAML file that exists in the current project.
-	/// Add this XmlNamespace attribute to the root element of the markup file where it is 
-	/// to be used:
-	///
-	///     xmlns:MyNamespace="clr-namespace:Schulte.UserControls"
-	///
-	///
-	/// Step 1b) Using this custom control in a XAML file that exists in a different project.
-	/// Add this XmlNamespace attribute to the root element of the markup file where it is 
-	/// to be used:
-	///
-	///     xmlns:MyNamespace="clr-namespace:Schulte.UserControls;assembly=Schulte.UserControls"
-	///
-	/// You will also need to add a project reference from the project where the XAML file lives
-	/// to this project and Rebuild to avoid compilation errors:
-	///
-	///     Right click on the target project in the Solution Explorer and
-	///     "Add Reference"->"Projects"->[Browse to and select this project]
-	///
-	///
-	/// Step 2)
-	/// Go ahead and use your control in the XAML file.
-	///
-	///     <MyNamespace:Tile/>
-	///
-	/// </summary>
-	public class Tile : Label
+	public enum PressType
+	{
+		Correct,
+		Incorrect,
+		None
+	}
+
+	public class Tile : RoundButton, INotifyPropertyChanged
 	{
 		public static DependencyProperty NumberProperty;
-		public static DependencyProperty TileMarginProperty;
-		public static DependencyProperty BorderStyleProperty;
-		public static DependencyProperty TileRadiusProperty;
+		public static DependencyProperty IsNumberNullProperty;
+		public static DependencyProperty IsCorrectPressProperty;
+		public static DependencyProperty InstanceProperty;
+		public static DependencyProperty SecondBackgroundProperty;
 
-		static Tile() 
+		static Tile()
 		{
 			NumberProperty = DependencyProperty.Register("Number", typeof(int), typeof(Tile),
-				new FrameworkPropertyMetadata(0));
-			TileMarginProperty = DependencyProperty.Register("BorderMargin", typeof(Thickness), typeof(Tile),
-				new FrameworkPropertyMetadata(new Thickness(0)));
-			TileRadiusProperty = DependencyProperty.Register("TileRadius", typeof(CornerRadius), typeof(Tile),
-				new FrameworkPropertyMetadata(new CornerRadius(8)));
-			BorderStyleProperty = DependencyProperty.Register("BorderStyle", typeof(Style), typeof(Tile),
-				new FrameworkPropertyMetadata(new Style(typeof(Border))));
+				new FrameworkPropertyMetadata(default));
+
+			IsNumberNullProperty = DependencyProperty.Register("IsNumberNull", typeof(bool), typeof(Tile),
+				new FrameworkPropertyMetadata(null));
+
+			IsCorrectPressProperty = DependencyProperty.Register("IsCorrectPress", typeof(PressType), typeof(Tile),
+				new FrameworkPropertyMetadata(PressType.None));
+
+			InstanceProperty = DependencyProperty.Register("Instance", typeof(Tile), typeof(Tile));
+
+			SecondBackgroundProperty = DependencyProperty.Register("SecondBackground", typeof(Brush), typeof(Tile),
+				new FrameworkPropertyMetadata(null));
+
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(Tile), new FrameworkPropertyMetadata(typeof(Tile)));
 		}
 
 		public Tile()
 		{
-			BorderThickness = new Thickness(0, 0, 0, 8);
-		}
+			PropertyChanged += (sender, args) =>
+			{
+				if (args.PropertyName == nameof(Number))
+					if (Number < 0)
+						IsNumberNull = true;
+					else
+						IsNumberNull = false;
 
+				if (args.PropertyName == nameof(Instance))
+					Instance = this;
+
+			};
+		}
 
 		public int Number
 		{
 			get => (int)GetValue(NumberProperty);
-			set => SetValue(NumberProperty, value);
-		}
-		public Style BorderStyle
-		{
-			get => (Style)GetValue(BorderStyleProperty);
-			set => SetValue(BorderStyleProperty, value);
-		}
-		public Thickness BorderMargin
-		{
-			get => (Thickness)GetValue(TileMarginProperty);
-			set => SetValue(TileMarginProperty, value);
+			set
+			{
+				SetValue(NumberProperty, value);
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(Instance));
+			}
 		}
 
-		public CornerRadius TileRadius
+		public bool? IsNumberNull
 		{
-			get => (CornerRadius)GetValue(TileRadiusProperty);
-			set => SetValue(TileRadiusProperty, value);
+			get => (bool)GetValue(IsNumberNullProperty);
+			set => SetValue(IsNumberNullProperty, value);
+		}
+
+		public PressType? IsCorrectPress
+		{
+			get => (PressType)GetValue(IsCorrectPressProperty);
+			set
+			{
+				SetValue(IsCorrectPressProperty, value);
+				OnPropertyChanged();
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected void OnPropertyChanged([CallerMemberName] string name = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+		}
+
+		public Tile Instance
+		{
+			get => (Tile)GetValue(InstanceProperty);
+			set => SetValue(InstanceProperty, value);
+		}
+
+		public Brush SecondBackground
+		{
+			get => (Brush)GetValue(SecondBackgroundProperty);
+			set => SetValue(SecondBackgroundProperty, value);
 		}
 	}
 }

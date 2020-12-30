@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Schulte.UserControls">
 
-
     <Style TargetType="{x:Type local:RoundButton}">
         <Setter Property="Template">
             <Setter.Value>
@@ -20,7 +19,7 @@
                             VerticalAlignment="Center"  
                             HorizontalAlignment="Center" />
                     </Border>
-                    <ControlTemplate.Triggers>
+                    <!--<ControlTemplate.Triggers>
                         <EventTrigger RoutedEvent="Button.Click">
                             <EventTrigger.Actions>
                                 <BeginStoryboard>
@@ -44,32 +43,142 @@
 
                             </EventTrigger.Actions>
                         </EventTrigger>
-                    </ControlTemplate.Triggers>
+                    </ControlTemplate.Triggers>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style TargetType="{x:Type local:Tile}">
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect ShadowDepth="0" Opacity="0" BlurRadius="20" Color="Green" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransform">
+            <Setter.Value >
+                <TranslateTransform X="0"/>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Tile}">
-                    <Border 
-                        Style="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:Tile}},
+
+                    <Border Style="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:Tile}},
                                Path=BorderStyle}"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        CornerRadius="{TemplateBinding TileRadius}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        >
-                        <ContentPresenter 
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Center" 
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="{TemplateBinding ButtonRadius}"
+                            BorderThickness="{TemplateBinding ButtonThickness}"
+                            Margin="{TemplateBinding BorderMargin}">
+                        <ContentPresenter
+                            Name ="Presenter"
+                            VerticalAlignment="Center"  
+                            HorizontalAlignment="Center"
                             Content="{TemplateBinding Number}"/>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsNumberNull" Value="True">
+                            <Setter
+                                TargetName="Presenter"
+                                Property="Visibility"
+                                Value="Hidden" />
+                        </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition  Property="IsCorrectPress" Value="Correct"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation AutoReverse="True" RepeatBehavior="1x" Storyboard.TargetProperty="Effect.(DropShadowEffect.Opacity)" From="0" To="1" Duration="0:0:.15">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CubicEase EasingMode="EaseOut" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <ThicknessAnimation To="0"
+                                                    Storyboard.TargetProperty="ButtonThickness"
+                                                    Duration="0:0:0.15"/>
+                                        <ThicknessAnimation To="0,8,0,0"
+                                                    Storyboard.TargetProperty="BorderMargin"
+                                                    Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                        </MultiTrigger>
+
+                        <MultiTrigger >
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsCorrectPress" Value="Incorrect"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames 
+                                            Storyboard.TargetProperty = "(local:RoundButton.RenderTransform).(TranslateTransform.X)"
+                                            Duration = "0:0:0.21"
+                                            RepeatBehavior="2x">
+                                            <LinearDoubleKeyFrame Value = "3" KeyTime = "0:0:0"/>
+                                            <LinearDoubleKeyFrame Value = "0" KeyTime = "0:0:0.7"/>
+                                            <LinearDoubleKeyFrame Value = "-3" KeyTime = "0:0:0.14"/>
+                                            <LinearDoubleKeyFrame Value = "0" KeyTime = "0:0:0.21"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type local:ScoreBlock}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ScoreBlock}">
+                    <Border 
+                        Style="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ScoreBlock}},
+                               Path=BorderStyle}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <DockPanel>
+                            <Label DockPanel.Dock="Top" Content="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ScoreBlock}},
+                               Path=ScoreInfo}"
+                                Style="{TemplateBinding TextStyle}" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="{TemplateBinding InfoPadding}" />
+                            <Label DockPanel.Dock="Bottom" Content="{TemplateBinding Quantity}" Style="{TemplateBinding TextStyle}" 
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" Padding="{TemplateBinding NumberPadding}" />
+                        </DockPanel>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:ImageButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ImageButton}">
+                    <Border Style="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ImageButton}},
+                               Path=BorderStyle}"
+                        Background="{TemplateBinding Background}"
+                           BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="{TemplateBinding ButtonRadius}"
+                            BorderThickness="{TemplateBinding ButtonThickness}"
+                            Margin="{TemplateBinding BorderMargin}">
+                        <Image Name="Image"  Source="{TemplateBinding LeaveImage}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Image" Property="Source" Value="{Binding EnterImage, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
