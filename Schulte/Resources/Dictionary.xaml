@@ -1,21 +1,61 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:local="clr-namespace:Schulte.UserControls">
+
     <Style  x:Key="baseStyle" TargetType="{x:Type Border}">
-        <Setter Property="TextBlock.FontSize" Value="25"></Setter>
-        <Setter Property="TextBlock.FontWeight" Value="Bold"></Setter>
-        <Setter Property="TextBlock.Foreground" Value="Black"></Setter>
+        <Setter Property="TextBlock.FontSize" Value="25"/>
+        <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+        <Setter Property="TextBlock.Foreground" Value="Black"/>
     </Style>
     
     <Style  x:Key="roundBtnStyle" TargetType="{x:Type local:RoundButton}">
-        <Setter Property="Background" Value="#FFD854AE"></Setter>
-        <Setter Property="BorderBrush" Value="DarkViolet"></Setter>
+        <Setter Property="Background" Value="#FFD854AE"/>
+        <Setter Property="BorderBrush" Value="DarkViolet"/>
         <Setter Property="BorderStyle" Value="{StaticResource baseStyle}"/>
     </Style>
-    <Style  x:Key="tileStyle" TargetType="{x:Type local:Tile}">
-        <Setter Property="Background" Value="#FFD854AE"></Setter>
-        <Setter Property="BorderBrush" Value="DarkViolet"></Setter>
+    <Style TargetType="{x:Type local:Tile}">
+        <Setter Property="Background" Value="#FFD854AE"/>
+        <Setter Property="BorderBrush" Value="DarkViolet"/>
         <Setter Property="BorderStyle" Value="{StaticResource baseStyle}"/>
+    </Style>
+    <Style  x:Key="ScoreBlockRed" TargetType="{x:Type local:ScoreBlock}">
+        <Setter Property="Background" Value="#FFE1526E"/>
+        <Setter Property="BorderBrush" Value="#FFA93D52"/>
+        <Setter Property="ScoreInfo" Value="Wrong clicks" />
+        <Setter Property="InfoPadding" Value="0,10,0,0"/>
+    </Style>
+    
+    <Style  x:Key="ScoreBlockGreen" TargetType="{x:Type local:ScoreBlock}">
+        <Setter Property="Background" Value="#FF769D16"/>
+        <Setter Property="BorderBrush" Value="#FF335C13"/>
+        <Setter Property="ScoreInfo" Value="Correct clicks"/>
+        <Setter Property="InfoPadding" Value="0,10,0,0"/>
+
+    </Style>
+
+    <Style TargetType="{x:Type local:ImageButton}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Background" Value="#FFD854AE"/>
+        <Setter Property="BorderBrush" Value="DarkViolet"/>
+        <Setter Property="Margin" Value="3" />
+        <Setter Property="BorderStyle" Value="{StaticResource baseStyle}"/>
+    </Style>
+
+    <Style  x:Key="ImageButtonDef" TargetType="{x:Type local:ImageButton}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="5,5,5,5"/>
+    </Style>
+    
+    <Style  x:Key="MenuButton" TargetType="{x:Type local:ImageButton}" BasedOn="{StaticResource ImageButtonDef}">
+        <Setter Property="EnterImage" Value="faviconEnter.png"/>
+        <Setter Property="LeaveImage" Value="faviconLeave.png"/>
+    </Style>
+
+    <Style  x:Key="RestartButton" TargetType="{x:Type local:ImageButton}" BasedOn="{StaticResource ImageButtonDef}">
+        <Setter Property="EnterImage" Value="faviconRestartEnter.png"/>
+        <Setter Property="LeaveImage" Value="faviconRestartLeave.png"/>
+
     </Style>
     <!--<Style  x:Key="baseStyle2" TargetType="{x:Type Border}">
         <Setter Property="Margin" Value="3" ></Setter>
@@ -34,7 +74,7 @@
     <ControlTemplate x:Key="btnTemplate" TargetType="{x:Type Button}">
 
        
-        <Border CornerRadius="10" Style="{StaticResource baseStyle2}">
+        <Border CornerRadius="10" Style="{StaticResource baseStyle}">
             <ContentPresenter HorizontalAlignment="Center" Margin="5" VerticalAlignment="Center"/>
         </Border>
         <ControlTemplate.Triggers>
