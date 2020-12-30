@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Schulte.UserControls;
+using Schulte.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,16 @@ namespace Schulte
 		public GamePage()
 		{
 			InitializeComponent();
+
+
+		}
+
+		private void Page_Loaded(object sender, RoutedEventArgs e)
+		{
+			Navigation.Navigation.Service = NavigationService.GetNavigationService(this);
+			GamePageViewModel viewModel = GamePageViewModel.GetInstance();
+			viewModel.StartGame();
+			this.DataContext = viewModel;
 		}
 	}
 }
