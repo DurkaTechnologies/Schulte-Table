@@ -25,6 +25,7 @@ namespace Schulte.UserControls
 		public static DependencyProperty IsCorrectPressProperty;
 		public static DependencyProperty InstanceProperty;
 		public static DependencyProperty SecondBackgroundProperty;
+		public static DependencyProperty SecondBorderBrushProperty;
 
 		static Tile()
 		{
@@ -39,7 +40,10 @@ namespace Schulte.UserControls
 
 			InstanceProperty = DependencyProperty.Register("Instance", typeof(Tile), typeof(Tile));
 
-			SecondBackgroundProperty = DependencyProperty.Register("SecondBackground", typeof(Brush), typeof(Tile),
+			SecondBackgroundProperty = DependencyProperty.Register("SecondBackground", typeof(SolidColorBrush), typeof(Tile),
+				new FrameworkPropertyMetadata(null));
+
+			SecondBorderBrushProperty = DependencyProperty.Register("SecondBorderBrush", typeof(Brush), typeof(Tile),
 				new FrameworkPropertyMetadata(null));
 
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(Tile), new FrameworkPropertyMetadata(typeof(Tile)));
@@ -101,10 +105,16 @@ namespace Schulte.UserControls
 			set => SetValue(InstanceProperty, value);
 		}
 
-		public Brush SecondBackground
+		public SolidColorBrush SecondBackground
 		{
-			get => (Brush)GetValue(SecondBackgroundProperty);
+			get => (SolidColorBrush)GetValue(SecondBackgroundProperty);
 			set => SetValue(SecondBackgroundProperty, value);
+		}
+
+		public Brush SecondBorderBrush
+		{
+			get => (Brush)GetValue(SecondBorderBrushProperty);
+			set => SetValue(SecondBorderBrushProperty, value);
 		}
 	}
 }

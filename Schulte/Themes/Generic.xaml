@@ -19,7 +19,7 @@
                             VerticalAlignment="Center"  
                             HorizontalAlignment="Center" />
                     </Border>
-                    <!--<ControlTemplate.Triggers>
+                    <ControlTemplate.Triggers>
                         <EventTrigger RoutedEvent="Button.Click">
                             <EventTrigger.Actions>
                                 <BeginStoryboard>
@@ -43,7 +43,7 @@
 
                             </EventTrigger.Actions>
                         </EventTrigger>
-                    </ControlTemplate.Triggers>-->
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -66,6 +66,7 @@
 
                     <Border Style="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:Tile}},
                                Path=BorderStyle}"
+                            Name="MainBorder"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             CornerRadius="{TemplateBinding ButtonRadius}"
@@ -86,26 +87,35 @@
                         </Trigger>
 
                         <MultiTrigger>
+                            
                             <MultiTrigger.Conditions>
                                 <Condition  Property="IsCorrectPress" Value="Correct"/>
                             </MultiTrigger.Conditions>
+
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="MainBorder" 
+                                        Property="Background" 
+                                        Value="{Binding SecondBackground, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Setter TargetName="MainBorder" 
+                                        Property="BorderBrush" 
+                                        Value="{Binding SecondBorderBrush, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </MultiTrigger.Setters>
                             <MultiTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation AutoReverse="True" RepeatBehavior="1x" Storyboard.TargetProperty="Effect.(DropShadowEffect.Opacity)" From="0" To="1" Duration="0:0:.15">
                                             <DoubleAnimation.EasingFunction>
-                                                <CubicEase EasingMode="EaseOut" />
+                                                <CubicEase EasingMode="EaseOut"/>
                                             </DoubleAnimation.EasingFunction>
                                         </DoubleAnimation>
-                                        <ThicknessAnimation To="0"
-                                                    Storyboard.TargetProperty="ButtonThickness"
-                                                    Duration="0:0:0.15"/>
-                                        <ThicknessAnimation To="0,8,0,0"
-                                                    Storyboard.TargetProperty="BorderMargin"
-                                                    Duration="0:0:0.15"/>
+                                        <ThicknessAnimation 
+                                            To="0,8,0,0"
+                                            Storyboard.TargetProperty="ButtonThickness"
+                                            Duration="0:0:0.15"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiTrigger.EnterActions>
+                           
                         </MultiTrigger>
 
                         <MultiTrigger >
