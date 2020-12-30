@@ -26,8 +26,7 @@ namespace Schulte.ViewModels
 	{
 		private GameView gameBoard;
 
-		private  bool sliderCanExecute = true;
-		private  bool restartButtonCanExecute = true;
+		private bool sliderCanExecute = true;
 
 		private Time currentTime;
 		//Time minTime;
@@ -36,7 +35,6 @@ namespace Schulte.ViewModels
 
 		DispatcherTimer gameTimer;
 		private Tile PressedTile;
-		private int currentNum;
 		private int size;
 		private int correctClicks;
 		private int wrongClicks;
@@ -48,16 +46,22 @@ namespace Schulte.ViewModels
 
 		public GamePageViewModel()
 		{
-			
-
 			toMainMenuCommand = new DelegateCommand(ToMainMenu, () => true);
-			restartGameCommand = new DelegateCommand(RestartGame, () => restartButtonCanExecute);
+			restartGameCommand = new DelegateCommand(RestartGame, RestartButtonCanExecute);
 			startGameCommand = new DelegateCommand(StartGame , () => true);
 			tilePressCommand = new RelayCommand(TilePress, (parameter) => true);
+
+			PropertyChanged += (sender, args) =>
+			{
+				if (args.PropertyName.Equals(nameof(CorrectClicks)))
+					restartGameCommand.RaiseCanExecuteChanged();
+
+				if (args.PropertyName.Equals(nameof(BoardSize)))
+					RestartGame();
+			};
 		}
 
 		private static GamePageViewModel instance;
-
 
 		public static GamePageViewModel GetInstance()
 		{
@@ -147,59 +151,54 @@ namespace Schulte.ViewModels
 
 		public void RestartGame()
 		{
-			MessageBox.Show("Restart Command Done", "Test");
+			currentTime.ResetTime();
+			gameTimer.Stop();
+			TimerData = currentTime.Text;
+			CorrectClicks = 0;
+			WrongClicks = 0;
+			gameBoard.FillGrid();
+			OnPropertyChanged(nameof(TileList));
+
 		}
 
 		public ICommand ToMainMenuCommand => toMainMenuCommand;
 
 		public ICommand RestartGameCommand => restartGameCommand;
+
 		public ICommand TilePressCommand => tilePressCommand;
 		
-		//public ICommand StartGameCommand => startGameCommand;
-
 		public void TilePress(object parameter)
 		{
 			PressedTile = (Tile)parameter;
-			if (currentNum == 0)
+			if (CorrectClicks == 0)
 			{
 				gameTimer.Start();
 				sliderCanExecute = false;
-				restartButtonCanExecute = true;
 
 			}
-			if (currentNum + 1 == PressedTile.Number)
+			if (CorrectClicks + 1 == PressedTile.Number)
 			{
 				CorrectClicks++;
-				currentNum++;
-				
 				PressedTile.IsCorrectPress = PressType.Correct;
-				//CheckWin();
+				CheckWin();
 			}
 			else
 			{
 				WrongClicks++;
 				if (PressedTile.IsCorrectPress == PressType.Correct)
-					return; 
-
-				if (PressedTile.IsCorrectPress == PressType.None)
-					PressedTile.IsCorrectPress = PressType.Incorrect;
-				else if (PressedTile.IsCorrectPress == PressType.Incorrect)
-				{
-					PressedTile.IsCorrectPress = PressType.None;
-					PressedTile.IsCorrectPress = PressType.Incorrect;
-				}
+					return;
+				PressedTile.IsCorrectPress = PressType.None;
+				PressedTile.IsCorrectPress = PressType.Incorrect;
 			}
-
 		}
 
 		private void SetStartValues()
 		{
 			currentTime.ResetTime();
-			timeData = currentTime.Text;
+			TimerData = currentTime.Text;
 			BoardSize = 5;
 			correctClicks = 0;
 			wrongClicks = 0;
-			currentNum = 0;
 		}
 
 		void timerTick(object sender, EventArgs e)
@@ -207,5 +206,21 @@ namespace Schulte.ViewModels
 			currentTime.AddSecond();
 			TimerData = currentTime.Text;
 		}
+
+		private void CheckWin()
+		{
+			if (CorrectClicks == QuantityTiles)
+			{
+				gameTimer.Stop();
+
+			}
+		}
+
+		#region CanExecutes
+		private bool RestartButtonCanExecute()
+		{
+			return CorrectClicks != 0;
+		}
+		#endregion
 	}
 }

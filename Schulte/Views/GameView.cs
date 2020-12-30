@@ -33,13 +33,6 @@ namespace Schulte.Views
 			random = new Random();
 			FillGrid();
 
-			//SetStartValues();
-			//currectTime = new Time();
-
-			//CreateGrid();
-			//CountCenter();
-			//FillGrid();
-			//SetCenterElement();
 			PropertyChanged += (sender, args) =>
 			{
 				if (args.PropertyName == nameof(Size))
@@ -58,15 +51,13 @@ namespace Schulte.Views
 			return instance;
 		}
 
-		private void FillGrid()
+		public void FillGrid()
 		{
 			int number;
 			Tile tile;
-
-			List<int> numbers = new List<int> { };
 			int quantityTiles = (size * size);
-			for (int i = 1; i < quantityTiles; i++)
-				numbers.Add(i);
+			List<int> numbers = GenarateNumbers(quantityTiles);
+		
 			ICollection<RoundButton> tempCollection = new ObservableCollection<RoundButton> { };
 			int center = (int)Math.Round((float)((size * size) / 2.0), MidpointRounding.AwayFromZero) -1;
 			for (int i = 0; i < quantityTiles; i++)
@@ -74,14 +65,7 @@ namespace Schulte.Views
 				tile = new Tile();
 				if (i == center)
 				{
-					ImageButton centerTile = new ImageButton();
-					var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(Resource.eye.GetHbitmap(),
-							  IntPtr.Zero,
-							  Int32Rect.Empty,
-							  BitmapSizeOptions.FromEmptyOptions());
-					centerTile.LeaveImage = bitmapSource;
-					centerTile.IsEnabled = false;
-					tempCollection.Add((RoundButton)centerTile);
+					SetCenterElement(ref tempCollection);
 					continue;
 				}
 
@@ -93,7 +77,7 @@ namespace Schulte.Views
 
 			if (tileCollection != null)
 				tileCollection.Clear();
-			tileCollection = tempCollection;
+			TileCollection = tempCollection;
 		}
 
 		public int Size
@@ -106,7 +90,6 @@ namespace Schulte.Views
 			}
 		}
 
-
 		public ICollection<RoundButton> TileCollection
 		{
 			get => tileCollection;
@@ -117,123 +100,35 @@ namespace Schulte.Views
 			}
 		}
 
-
-		private void SetCenterElement()
+		private void SetCenterElement(ref ICollection<RoundButton> collection )
 		{
-			ImageButton centerControl = new ImageButton();
-			//centerControl.EnterImage =  ImageSource;
-			//var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(Resource.eye.GetHbitmap(),
-			//					  IntPtr.Zero,
-			//					  Int32Rect.Empty,
-			//					  BitmapSizeOptions.FromEmptyOptions());
-			//centerControl.BorderStyle = TryFindResource("baseStyle") as Style;
-			//Grid.Children.Add(border);
-			//Grid.SetColumn(border, center.X);
-			//Grid.SetRow(border, center.Y);
+			ImageButton centerTile = new ImageButton();
+			var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(Resource.eye.GetHbitmap(),
+					  IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+			centerTile.LeaveImage = bitmapSource;
+			centerTile.IsEnabled = false;
+			collection.Add(centerTile);
 		}
-
-
 
 		public void CountCenter()
 		{
 			int position = size - size / 2;
-
 			center = new Int32Point(position - 1, position - 1);
 		}
 
-		//private void Border_MouseUp(object sender, MouseButtonEventArgs e)
-		//{
-		//	restartBtn.IsEnabled = false;
-		//}
-
-		/*private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+		public List<int> GenarateNumbers(int quantity)
 		{
-			if (currentNum == 0)
-			{
-				gameTimer.Start();
-				slider.IsEnabled = false;
-				restartBtn.IsEnabled = true;
-				restartBtn.BorderThickness = new Thickness(0, 0, 0, 6);
-				restartBtn.Margin = new Thickness(20, 0, 20, 10);
-				restartBtn.MouseUp -= Border_MouseUp;
+			List<int> numbers = new List<int> { };
+			for (int i = 1; i < quantity; i++)
+				numbers.Add(i);
 
-			}
-			Border current = sender as Border;
-			int thisButtonNum = int.Parse((current.Child as TextBlock)?.Text);
-			if (currentNum + 1 == thisButtonNum)
-			{
-				correctClicks++;
-				correctClicksText.Text = correctClicks.ToString();
-
-				current.Style = correctStyle;
-				currentNum++;
-				current.IsEnabled = false;
-				this.bar.Value++;
-				current.Background = current.BorderBrush;
-				CheckWin();
-			}
-			else
-			{
-				wrongClicks++;
-				wrongClicksText.Text = wrongClicks.ToString();
-				current.Style = incorrectStyle;
-			}
-		}*/
-
-		//private void CheckWin()
-		//{
-		//	if (currentNum == (size * size) - 1)
-		//	{
-		//		gameTimer.Stop();
-		//		slider.IsEnabled = true;
-		//		if (minTime.IsReset())
-		//			minTime = currectTime;
-		//		else if (minTime >= currectTime)
-		//			minTime = currectTime;
-		//		recordTime.Text = minTime.Text;
-		//		MessageBox.Show("YOU WIN", "WIN", MessageBoxButton.OK, MessageBoxImage.None);
-		//	}
-		//}
-
-		//private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-		//{
-		//	if (Grid == null)
-		//		return;
-		//	this.bar.Value = 0;
-		//	CreateGrid();
-		//	CountCenter();
-		//	FillGrid();
-		//	SetCenterElement();
-		//	minTime.ResetTime();
-		//	recordTime.Text = minTime.Text;
-		//	this.bar.Maximum = (size * size) - 1;
-		//	restartBtn.IsEnabled = true;
-
-		//}
-
-		//private void Restart_MouseDown(object sender, MouseButtonEventArgs e)
-		//{
-		//	gameTimer.Stop();
-		//	SetStartValues();
-		//	bar.Value = 0;
-		//	CreateGrid();
-		//	CountCenter();
-		//	FillGrid();
-		//	SetCenterElement();
-		//	restartBtn.MouseUp += Border_MouseUp;
-
-		//	slider.IsEnabled = true;
-
-		//}
-
-		
-
+			return numbers;
+		}
 
 		protected void OnPropertyChanged([CallerMemberName] string name = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
-
 	}
 
 	public struct Int32Point
@@ -247,5 +142,4 @@ namespace Schulte.Views
 		public int X { get; set; }
 		public int Y { get; set; }
 	}
-
 }
