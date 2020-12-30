@@ -14,24 +14,60 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Dictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style TargetType="local:Tile" BasedOn="{StaticResource roundBtnStyle}">
+            <Style x:Key="DefTileStyle" TargetType="local:Tile" BasedOn="{StaticResource roundBtnStyle}">
                 <Setter Property="Command" Value="{Binding TilePressCommand }" />
-                <Setter Property="Margin" Value="3" />
+                <Setter Property="Margin" Value="3"/>
                 <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Instance}" />
             </Style>
-        </ResourceDictionary>
-        
-    </Page.Resources>
-    <!--<UniformGrid>
-        <local:Tile Style="{StaticResource tileStyle}">
-            
-        </local:Tile>
-        <local:RoundButton  Style="{StaticResource roundBtnStyle}" >
-           fdfdfds
-        </local:RoundButton>
-        
-    </UniformGrid>-->
 
+            <Style TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
+                <Setter Property="SecondBackground" Value="#FF83336A"/>
+                <Setter Property="SecondBorderBrush" Value="#FF590080"/>
+            </Style>
+
+            <Style x:Key="White" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
+                <Setter Property="Background" Value="WhiteSmoke"/>
+                <Setter Property="BorderBrush" Value="#FFB8B8B8"/>
+                <Setter Property="SecondBackground" Value="WhiteSmoke"/>
+                <Setter Property="SecondBorderBrush" Value="#FFB8B8B8"/>
+            </Style>
+
+            <Style x:Key="Green" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
+                <Setter Property="Background" Value="#FF94D34A"/>
+                <Setter Property="BorderBrush" Value="#FF6F9E37"/>
+                <Setter Property="SecondBackground" Value="#FF94D34A"/>
+                <Setter Property="SecondBorderBrush" Value="#FF6F9E37"/>
+            </Style>
+
+            <Style x:Key="Magenta" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
+                <Setter Property="Background" Value="#FFBD80F6"/>
+                <Setter Property="BorderBrush" Value="#FF8D60B9"/>
+                <Setter Property="SecondBackground" Value="#FFBD80F6"/>
+                <Setter Property="SecondBorderBrush" Value="#FF8D60B9"/>
+            </Style>
+
+            <Style x:Key="Blue" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
+                <Setter Property="Background" Value="#FF6898CB"/>
+                <Setter Property="BorderBrush" Value="#FF4E7298"/>
+                <Setter Property="SecondBackground" Value="#FF6898CB"/>
+                <Setter Property="SecondBorderBrush" Value="#FF4E7298"/>
+            </Style>
+
+            <Style x:Key="Yellow" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
+                <Setter Property="Background" Value="#FFF0C02D"/>
+                <Setter Property="BorderBrush" Value="#FFB48F22"/>
+                <Setter Property="SecondBackground" Value="#FFF0C02D"/>
+                <Setter Property="SecondBorderBrush" Value="#FFB48F22"/>
+            </Style>
+
+            <Style x:Key="Red" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
+                <Setter Property="Background" Value="#FFE1526E"/>
+                <Setter Property="BorderBrush" Value="#FFA93D52"/>
+                <Setter Property="SecondBackground" Value="#FFE1526E"/>
+                <Setter Property="SecondBorderBrush" Value="#FFA93D52"/>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
 
     <Grid >
         <Grid.Background>
@@ -91,55 +127,19 @@
             IsSnapToTickEnabled="True" />
         </UniformGrid>
 
-
-        <!--<UniformGrid Grid.Row="3" Rows="4">
-            <Button Template="{StaticResource btnTemplate}">54353</Button>
-            <Border x:Name="restartBtn"   Margin="20, 0 ,20, 10" >
-                <TextBlock VerticalAlignment="Center">Restart</TextBlock>
-            </Border>
-            <Slider 
-            x:Name="slider"
-            Margin="30,10" 
-            Ticks="3 5 7 9" 
-            Maximum="9" 
-            Minimum="3" 
-            TickPlacement="BottomRight" 
-            IsSnapToTickEnabled="True" Value="5"/>
-          
-            
-            <local:ScoreBlock Style="{StaticResource ScoreBlockGreen}"/>
-
-            <local:ScoreBlock Style="{StaticResource ScoreBlockRed}">
-                
-            </local:ScoreBlock>
-        </UniformGrid>-->
-
         <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Background="#334B0082" BorderBrush="#FFDEA3F9" BorderThickness="5" CornerRadius="8" >
             <Border BorderBrush="Black" BorderThickness="5" CornerRadius="8" Background="White">
-                <!--<Grid Margin="8" x:Name="Grid"  >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Border Margin="10"
-                     Padding="5"
-                     BorderBrush="Black"
-                     BorderThickness="1"
-                     CornerRadius="2">      
-                        <local:UniformGirdItemsControl x:Name="ItemsControl"
-                                 MainItemsSource="{Binding ItemsSource}"
-                                 MinColumnWidth="100"
-                                 MinRowHeight="50" />
-                    </Border>
-                </Grid>-->
-                <ItemsControl ItemsSource="{Binding TileList}" >
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Columns="{Binding Size}" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                        
-                </ItemsControl>
+                <Grid Name="SSS">
+                    <ItemsControl ItemsSource="{Binding TileList}" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="{Binding Size}" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                    </ItemsControl>
+                </Grid>
+                
             </Border>
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="10" BlurRadius="20"  Direction="270"></DropShadowEffect>
@@ -147,7 +147,7 @@
         </Border>
         <DockPanel HorizontalAlignment="Center" Grid.Column="1" TextBlock.FontSize="28" Margin="0,5,0,5" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Padding="20, 0,0,0">Record:</TextBlock>
-            <TextBlock x:Name="recordTime" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="10, 0,20,0">00:00</TextBlock>
+            <TextBlock x:Name="recordTime" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="10,0,20,0">00:00</TextBlock>
         </DockPanel>
         <ProgressBar 
             Grid.Row="4" 
