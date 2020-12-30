@@ -36,6 +36,6 @@ namespace Schulte.Commands
         void ICommand.Execute(object parameter)
         {
             Execute();
-        }
+		}
     }
 }

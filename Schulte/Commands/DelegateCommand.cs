@@ -31,7 +31,7 @@ namespace Schulte.Commands
 
         protected override void Execute()
         {
-            executeMethod();
-        }
+			executeMethod();
+		}
     }
 }
