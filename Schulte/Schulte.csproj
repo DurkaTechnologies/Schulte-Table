@@ -159,9 +159,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\99px_ru_wallpaper_230429_planeti_v_kosmicheskom_prostranstve_by_vadim_sadovski.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\timer.png" />
   </ItemGroup>
   <ItemGroup>
@@ -172,9 +169,6 @@
     <Resource Include="Resources\faviconLeave.png" />
     <Resource Include="Resources\faviconRestartEnter.png" />
     <Resource Include="Resources\faviconRestartLeave.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\If.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
