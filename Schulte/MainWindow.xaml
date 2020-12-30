@@ -12,9 +12,9 @@
     <Window.Resources>
         <ResourceDictionary >
 
-            <ResourceDictionary.MergedDictionaries >
-                <ResourceDictionary x:Name="salo" Source="Resources/Dictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+            <!--<ResourceDictionary.MergedDictionaries >
+                <ResourceDictionary Source="Resources/Dictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>-->
             
             <Style  x:Key="baseStyle" TargetType="{x:Type Border}">
             <Setter Property="Margin" Value="3" ></Setter>

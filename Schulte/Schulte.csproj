@@ -56,8 +56,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AboutPage.xaml.cs">
+      <DependentUpon>AboutPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Navigation\IPageResolver.cs" />
+    <Compile Include="Navigation\Navigation.cs" />
+    <Compile Include="Navigation\PagesResolver.cs" />
+    <Compile Include="StatisticPage.xaml.cs">
+      <DependentUpon>StatisticPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ImageButton.cs" />
+    <Compile Include="UserControls\ScoreBlock.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
@@ -71,7 +83,17 @@
     </Compile>
     <Compile Include="UserControls\RoundButton.cs" />
     <Compile Include="UserControls\Tile.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\GamePageViewModel.cs" />
+    <Compile Include="ViewModels\IViewModelsResolver.cs" />
     <Compile Include="ViewModels\MainMenuModel.cs" />
+    <Compile Include="ViewModels\ViewModelsResolver.cs" />
+    <Compile Include="Views\GameView.cs" />
+    <Compile Include="Views\Time.cs" />
+    <Page Include="AboutPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Dictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -96,6 +118,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="StatisticPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -141,6 +167,14 @@
   <ItemGroup>
     <None Include="Resources\eye.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\faviconEnter.png" />
+    <Resource Include="Resources\faviconLeave.png" />
+    <Resource Include="Resources\faviconRestartEnter.png" />
+    <Resource Include="Resources\faviconRestartLeave.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\If.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

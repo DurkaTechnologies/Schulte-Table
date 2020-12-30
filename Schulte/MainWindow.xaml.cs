@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Schulte.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,6 +53,7 @@ namespace Schulte
 			//SetCenterElement();
 
 			//this.bar.Maximum = (size * size) - 1;
+			
 		}
 
 	//	private bool InitializeStyles()
@@ -237,82 +239,9 @@ namespace Schulte
 	//	}
 	}
 
-	public struct Int32Point
-	{
+	
 
-		public Int32Point(int x, int y)
-		{
-			X = x;
-			Y = y;
-		}
-		public int X { get; set; }
-		public int Y { get; set; }
-	}
-
-	public struct Time
-	{
-		public Time(int seconds = 0)
-		{
-			Seconds = seconds;
-			Minutes = 0;
-			Text = "00:00";
-		}
-
-		public void ResetTime()
-		{
-			Seconds = 0;
-			Minutes = 0;
-			Text = "00:00";
-		}
-		public bool IsReset()
-		{
-			return ((Seconds == 0) && (Minutes == 0));
-		}
-		public int Seconds { get; set; }
-		public int Minutes { get; set; }
-		public string Text { get; set; }
-
-		public void AddSecond()
-		{
-			++Seconds;
-			if (Seconds % 60 == 0)
-			{
-				Minutes++;
-				Seconds = 0;
-				Text = (Minutes < 10 ? $"0{Minutes}" : $"{Minutes}") + ":00";
-			}
-			else
-				Text = (Minutes < 10 ? $"0{Minutes}" : $"{Minutes}") + ':'
-					+ (Seconds < 10 ? $"0{Seconds}" : $"{Seconds}");
-
-		}
-
-		public override string ToString()
-		{
-			return Text;
-		}
-		public static bool operator <=(Time left, Time right)
-		{
-			if (left.Minutes < right.Minutes)
-				return true;
-			else if (left.Minutes == right.Minutes)
-				return left.Seconds <= right.Seconds;
-			else
-				return false;
-
-		}
-		public static bool operator >=(Time left, Time right)
-		{
-			if (left.Minutes > right.Minutes)
-				return true;
-			else if (left.Minutes == right.Minutes)
-				return left.Seconds >= right.Seconds;
-			else
-				return false;
-
-		}
-
-	}
+	
 
 
 }
