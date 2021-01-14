@@ -35,4 +35,5 @@ namespace Schulte
 			this.DataContext = viewModel;
 		}
 	}
+
 }

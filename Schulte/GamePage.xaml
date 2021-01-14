@@ -4,67 +4,178 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Schulte.UserControls"
+      xmlns:enums="clr-namespace:Schulte.ViewModels"
       mc:Ignorable="d" 
-       MinHeight="450" MinWidth="800"
+      MinHeight="450" MinWidth="800"
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="GamePage" Loaded="Page_Loaded"
-      >
+                        
+      Title="22"  Loaded="Page_Loaded">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Dictionary.xaml" />
+                <ResourceDictionary Source="Resources/TileDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="DefTileStyle" TargetType="local:Tile" BasedOn="{StaticResource roundBtnStyle}">
-                <Setter Property="Command" Value="{Binding TilePressCommand }" />
-                <Setter Property="Margin" Value="3"/>
-                <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Instance}" />
-            </Style>
-
-            <Style TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
+            
+            <Style TargetType="{x:Type local:Tile}" BasedOn="{StaticResource DefTileStyle}">
                 <Setter Property="SecondBackground" Value="#FF83336A"/>
                 <Setter Property="SecondBorderBrush" Value="#FF590080"/>
             </Style>
+            
+            <!--#region Slider Style and Template-->
 
-            <Style x:Key="White" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
-                <Setter Property="Background" Value="WhiteSmoke"/>
-                <Setter Property="BorderBrush" Value="#FFB8B8B8"/>
-                <Setter Property="SecondBackground" Value="WhiteSmoke"/>
-                <Setter Property="SecondBorderBrush" Value="#FFB8B8B8"/>
+            <Style x:Key="CustomThumbForSlider" TargetType="{x:Type Thumb}">
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border
+                                Background="#FFD854AE" 
+                                BorderThickness="1,1,1,4" 
+                                BorderBrush="DarkViolet" 
+                                CornerRadius="4" 
+                                MinWidth="25" MinHeight="25"
+                                MaxWidth="35" MaxHeight="35">
+                                <ContentPresenter 
+                                    Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor,  
+                                    AncestorType=Slider}, Path=Value}"
+                                    TextBlock.TextAlignment="Center"
+                                    TextBlock.FontSize="14"
+                                    TextBlock.FontWeight="Bold"
+                                    TextBlock.Foreground="Black"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <SolidColorBrush x:Key="HorizontalSliderTrackNormalBackground" Color="#FFE7EAEA"/>
+            <LinearGradientBrush x:Key="HorizontalSliderTrackNormalBorder" EndPoint="0,1" StartPoint="0,0">
+                <GradientStop Color="DarkViolet" Offset="0.1"/>
+                <GradientStop Color="#FFD854AE" Offset=".9"/>
+            </LinearGradientBrush>
+
+            <Style x:Key="SliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+                <Setter Property="OverridesDefaultStyle" Value="true"/>
+                <Setter Property="IsTabStop" Value="false"/>
+                <Setter Property="Focusable" Value="false"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RepeatButton}">
+                            <Rectangle Fill="Transparent"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style  TargetType="{x:Type Slider}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Slider}">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TickBar x:Name="TopTick" Visibility="Visible" Fill="White" Placement="Top" Height="8" Grid.Row="0"/>
+                                    <TickBar x:Name="BottomTick" Visibility="Visible" Fill="White" Placement="Bottom" Height="8" Grid.Row="0"/>
+                                    <Border x:Name="TrackBackground" 
+                                        Background="#FFD854AE"
+                                        BorderBrush="{StaticResource HorizontalSliderTrackNormalBorder}"    
+                                        BorderThickness="1" CornerRadius="2"
+                                        Margin="5,0"  Height="6" Grid.Row="1" >
+                                        <Canvas Margin="-6,-1">
+                                            <Rectangle Visibility="Hidden" x:Name="PART_SelectionRange" Height="4.0"
+                                                   Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                                                   Stroke="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}"
+                                                   StrokeThickness="1.0"/>
+                                        </Canvas>
+                                    </Border>
+                                    <Track x:Name="PART_Track" Grid.Row="1">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Style="{StaticResource SliderRepeatButtonStyle}" Command="{x:Static Slider.DecreaseLarge}"/>
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Style="{StaticResource SliderRepeatButtonStyle}" Command="{x:Static Slider.IncreaseLarge}"/>
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb x:Name="Thumb" Style="{StaticResource CustomThumbForSlider}" Background="Black"/>
+                                        </Track.Thumb>
+                                    </Track>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <!--#endregion-->
+
+            <local:EnumBooleanConverter x:Key="enumBooleanConverter"/>
+
+            <DropShadowEffect x:Key="StandatShadow" BlurRadius="5" ShadowDepth="5" Direction="270" Opacity="0.8"></DropShadowEffect>
+
+            <Style TargetType="local:RoundButton" BasedOn="{StaticResource roundBtnStyle}">
+                <Setter Property="Effect" Value="{StaticResource StandatShadow}"/>
+                <Setter Property="Padding" Value="0,0,0,5"/>
+                <Setter Property="Margin" Value="20,5"/>
+                <Setter Property="SecondBackground" Value="#FF83336A"/>
+                <Setter Property="SecondBorderBrush" Value="#FF590080"/>
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Trigger.Setters>
+                            <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=SecondBackground}"/>
+                            <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=SecondBorderBrush}"/>
+                            <Setter Property="BorderThickness" Value="0,8,0,0"/>
+                        </Trigger.Setters>
+                       
+                    </Trigger>
+                    <DataTrigger Binding="{Binding Path=GameType, Converter={StaticResource enumBooleanConverter},
+                                    ConverterParameter=GameMinusMode}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+
+                    <DataTrigger Binding="{Binding Path=GameType, Converter={StaticResource enumBooleanConverter},
+                                    ConverterParameter=GamePlusMode}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
 
-            <Style x:Key="Green" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
-                <Setter Property="Background" Value="#FF94D34A"/>
-                <Setter Property="BorderBrush" Value="#FF6F9E37"/>
-                <Setter Property="SecondBackground" Value="#FF94D34A"/>
-                <Setter Property="SecondBorderBrush" Value="#FF6F9E37"/>
-            </Style>
+            <Storyboard x:Key="BlurAnimation">
+                <DoubleAnimation Storyboard.TargetProperty="Effect.(BlurEffect.Radius)" To="10" />
+            </Storyboard>
 
-            <Style x:Key="Magenta" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
-                <Setter Property="Background" Value="#FFBD80F6"/>
-                <Setter Property="BorderBrush" Value="#FF8D60B9"/>
-                <Setter Property="SecondBackground" Value="#FFBD80F6"/>
-                <Setter Property="SecondBorderBrush" Value="#FF8D60B9"/>
-            </Style>
-
-            <Style x:Key="Blue" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
-                <Setter Property="Background" Value="#FF6898CB"/>
-                <Setter Property="BorderBrush" Value="#FF4E7298"/>
-                <Setter Property="SecondBackground" Value="#FF6898CB"/>
-                <Setter Property="SecondBorderBrush" Value="#FF4E7298"/>
-            </Style>
-
-            <Style x:Key="Yellow" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
-                <Setter Property="Background" Value="#FFF0C02D"/>
-                <Setter Property="BorderBrush" Value="#FFB48F22"/>
-                <Setter Property="SecondBackground" Value="#FFF0C02D"/>
-                <Setter Property="SecondBorderBrush" Value="#FFB48F22"/>
-            </Style>
-
-            <Style x:Key="Red" TargetType="local:Tile" BasedOn="{StaticResource DefTileStyle}">
-                <Setter Property="Background" Value="#FFE1526E"/>
-                <Setter Property="BorderBrush" Value="#FFA93D52"/>
-                <Setter Property="SecondBackground" Value="#FFE1526E"/>
-                <Setter Property="SecondBorderBrush" Value="#FFA93D52"/>
+            <Style TargetType="{x:Type local:ImageButton}" BasedOn="{StaticResource TileImageButton}">
+                <Style.Triggers>
+                    <DataTrigger  Binding="{Binding Path=GameStatus, Converter={StaticResource enumBooleanConverter},
+                                    ConverterParameter=GameWin}" Value="True">
+                        <DataTrigger.Setters>
+                            <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=SecondBackground}"/>
+                            <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=SecondBorderBrush}"/>
+                        </DataTrigger.Setters>
+                        <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ThicknessAnimation 
+                                            To="0,8,0,0"
+                                            Storyboard.TargetProperty="ButtonThickness"
+                                            Duration="0:0:0.15"/>       
+                                    </Storyboard>
+                                </BeginStoryboard>
+                        </DataTrigger.EnterActions>
+                        <DataTrigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ThicknessAnimation 
+                                            To="0,0,0,8"
+                                            Storyboard.TargetProperty="ButtonThickness"
+                                            Duration="0:0:0.15"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </DataTrigger.ExitActions>
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </Page.Resources>
@@ -102,61 +213,168 @@
             <local:ImageButton Margin="20,5,0,0" Grid.Column="0" Style="{StaticResource RestartButton}" Command="{Binding RestartGameCommand}"/>
         </DockPanel>
         <UniformGrid Rows="2" Grid.Column="2" Grid.Row="2" VerticalAlignment="Top">
-            <local:ScoreBlock  Style="{StaticResource ScoreBlockGreen}" Quantity="{Binding CorrectClicks}" Margin="10,0,10,10"/>
-            <local:ScoreBlock  Style="{StaticResource ScoreBlockRed}" Quantity="{Binding WrongClicks}" Margin="10,0,10,10"/>
+            <local:ScoreBlock  Style="{StaticResource ScoreBlockGreen}" Quantity="{Binding CorrectClicks}" Margin="10,0,10,10">
+                <local:ScoreBlock.Effect>
+                    <DropShadowEffect BlurRadius="5" ShadowDepth="5" Direction="270" Opacity="0.8"/>
+                </local:ScoreBlock.Effect>
+            </local:ScoreBlock>
+            <local:ScoreBlock  Style="{StaticResource ScoreBlockRed}" Quantity="{Binding WrongClicks}" Margin="10,0,10,10">
+                <local:ScoreBlock.Effect>
+                    <DropShadowEffect BlurRadius="5" ShadowDepth="5" Direction="270" Opacity="0.8"/>
+                </local:ScoreBlock.Effect>
+            </local:ScoreBlock>
         </UniformGrid>
-        <Image Grid.Row="1" Margin="5" HorizontalAlignment="Center" Source="Resources/timer.png" />
+        <Image Grid.Row="1" Margin="5" HorizontalAlignment="Center" Source="Resources/timer.png">
+            <Image.Effect>
+                <DropShadowEffect BlurRadius="20"/>
+            </Image.Effect>
+        </Image>
 
-        <UniformGrid Rows="2" Grid.Row="2" VerticalAlignment="Top" >
+        <UniformGrid Rows="6" Grid.Row="2" VerticalAlignment="Top" >
             <TextBlock
                 Text="{Binding TimerData}"
                 Margin="10,0,10,10" 
-                x:Name="timer" 
                 FontSize="30" 
-                Foreground="White" 
-                HorizontalAlignment="Center" 
-                VerticalAlignment="Center"/>
+                Foreground="White"
+                HorizontalAlignment="Center">
+                <TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="20"/>
+                </TextBlock.Effect>
+            </TextBlock>
             <Slider 
-            x:Name="slider"
-            Margin="20,10" 
-            Ticks="3 5 7 9" 
-            Maximum="9" 
-            Value="{Binding BoardSize}"
-            Minimum="3" 
-            TickPlacement="BottomRight" 
-            IsSnapToTickEnabled="True" />
+                Margin="20,5" 
+                Ticks="3 5 7" 
+                Maximum="7" 
+                Value="{Binding BoardSize}"
+                Minimum="3" 
+                TickPlacement="BottomRight" 
+                IsSnapToTickEnabled="True" MinHeight="20">
+                <Slider.Effect>
+                    <DropShadowEffect BlurRadius="20"/>
+                </Slider.Effect>
+            </Slider>
+
+            <local:RoundButton Content="Easy" Command="{Binding SetEasyModeCommand}"/>
+            <local:RoundButton Content="Middle" Command="{Binding SetMiddleModeCommand}"/>
+            <local:RoundButton Content="Hard" Command="{Binding SetHardModeCommand}"/>
+            <local:RoundButton  Command="{Binding SetSchulteModeCommand}">
+                <local:RoundButton.Style>
+                    <Style TargetType="local:RoundButton" BasedOn="{StaticResource roundBtnStyle}">
+                        <Setter Property="Effect" Value="{StaticResource StandatShadow}"/>
+                        <Setter Property="Padding" Value="0,0,0,5"/>
+                        <Setter Property="Margin" Value="20,5"/>
+                        <Setter Property="Background" Value="{StaticResource SchulteBackground}"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource SchulteBorder}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SchulteMode}" Value="False">
+                                <DataTrigger.Setters>
+                                    <Setter Property="Background" Value="{StaticResource SchulteBackground}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource SchulteBorder}"/>
+                                    <Setter Property="Content" Value="Schulte"/>
+                                </DataTrigger.Setters>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding SchulteMode}" Value="True">
+                                <DataTrigger.Setters>
+                                    <Setter Property="Background" Value="{StaticResource StandartBackground}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource StandartBorder}"/>
+                                    <Setter Property="Content" Value="Default"/>
+                                </DataTrigger.Setters>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </local:RoundButton.Style>
+                
+            </local:RoundButton>
         </UniformGrid>
 
-        <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Background="#334B0082" BorderBrush="#FFDEA3F9" BorderThickness="5" CornerRadius="8" >
+        <Border Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Background="#334B0082"
+                BorderBrush="#FFD854AE" BorderThickness="5" CornerRadius="8">
             <Border BorderBrush="Black" BorderThickness="5" CornerRadius="8" Background="White">
-                <Grid Name="SSS">
+                <Grid>
                     <ItemsControl ItemsSource="{Binding TileList}" >
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="{Binding Size}" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-
                     </ItemsControl>
                 </Grid>
-                
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <BlurEffect Radius="0" ></BlurEffect>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=GameStatus, Converter={StaticResource enumBooleanConverter},
+                            ConverterParameter=InProgress}" Value="True">
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <BlurEffect Radius="0" ></BlurEffect>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=GameStatus, Converter={StaticResource enumBooleanConverter},
+                            ConverterParameter=InProgress}" Value="False">
+                                <DataTrigger.EnterActions >
+                                    <BeginStoryboard Storyboard="{StaticResource BlurAnimation}"/>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
             </Border>
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="10" BlurRadius="20"  Direction="270"></DropShadowEffect>
-            </Border.Effect>
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Effect" Value="{StaticResource StandatShadow}"/>
+                </Style>
+            </Border.Style>
         </Border>
-        <DockPanel HorizontalAlignment="Center" Grid.Column="1" TextBlock.FontSize="28" Margin="0,5,0,5" TextBlock.FontWeight="Bold" TextBlock.Foreground="White">
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Padding="20, 0,0,0">Record:</TextBlock>
-            <TextBlock x:Name="recordTime" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="10,0,20,0">00:00</TextBlock>
-        </DockPanel>
-        <ProgressBar 
+      
+        <!--<ProgressBar 
             Grid.Row="4" 
             Grid.Column="1" 
             Margin="0, 20, 0, 20" 
             Foreground="#FFB80CC9" 
             BorderBrush="Black" 
             Background="White"
-            Value="{Binding CorrectClicks}" Maximum="{Binding QuantityTiles}"/>
+            Value="{Binding CorrectClicks}" Maximum="{Binding QuantityTiles}"/>-->
+        
+        <local:WinPage Grid.ColumnSpan="3" Grid.RowSpan="4">
+            <local:WinPage.Style>
+                <Style TargetType="{x:Type local:WinPage}" >
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=GameStatus, Converter={StaticResource enumBooleanConverter},
+                                    ConverterParameter=GameWin}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
 
+                        <DataTrigger Binding="{Binding Path=GameStatus, Converter={StaticResource enumBooleanConverter},
+                                    ConverterParameter=GameWin}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </local:WinPage.Style>
+        </local:WinPage>
+        
+        <local:GameOverPage Grid.ColumnSpan="3" Grid.RowSpan="4">
+            <local:GameOverPage.Style>
+                <Style TargetType="{x:Type local:GameOverPage}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=GameStatus, Converter={StaticResource enumBooleanConverter},
+                                    ConverterParameter=GameLost}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding Path=GameStatus, Converter={StaticResource enumBooleanConverter},
+                                    ConverterParameter=GameLost}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </local:GameOverPage.Style>
+        </local:GameOverPage>
     </Grid>
 </Page>
