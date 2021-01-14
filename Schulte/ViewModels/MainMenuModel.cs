@@ -36,6 +36,7 @@ namespace Schulte.ViewModels
 		public MainMenuModel()
 		{
 			startGamePlusCommand = new DelegateCommand(StartPlusGame, () => true);
+			startGameMinusCommand = new DelegateCommand(StartMinusGame, () => true);
 		}
 
 		private void InitializeCommands()
@@ -53,11 +54,16 @@ namespace Schulte.ViewModels
 
 		public ICommand StartGamePlusCommand => startGamePlusCommand;
 
+		public ICommand StartGameMinusCommand => startGameMinusCommand;
+
 		public void StartPlusGame()
 		{
-
-			Navigation.Navigation.Navigate(Navigation.Navigation.GameBoardAlias, GamePageViewModel.GetInstance());
-
+			Navigation.Navigation.Navigate(Navigation.Navigation.GameBoardAlias, GamePageViewModel.GetInstance(GameType.GamePlusMode));
+		}	
+		
+		public void StartMinusGame()
+		{
+			Navigation.Navigation.Navigate(Navigation.Navigation.GameBoardAlias, GamePageViewModel.GetInstance(GameType.GameMinusMode));
 		}
 
 	}
