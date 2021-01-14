@@ -21,7 +21,7 @@ namespace Schulte.Commands
 		{
 		}
 
-		public RelayCommand(Action<object> executeMethod, Func<object,  bool> canExecuteMethod)
+		public RelayCommand(Action<object> executeMethod, Func<object, bool> canExecuteMethod)
 		{
 			this.canExecuteMethod = canExecuteMethod;
 			this.executeMethod = executeMethod;
@@ -34,7 +34,7 @@ namespace Schulte.Commands
 
 		public void Execute(object parameter)
 		{
-				executeMethod(parameter);
+			executeMethod(parameter);
 		}
 
 		protected virtual void OnCanExecuteChanged(EventArgs e)
