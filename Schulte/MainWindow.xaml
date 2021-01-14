@@ -5,68 +5,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Schulte"
         mc:Ignorable="d"
-        MinHeight="600" MinWidth="500"
-    
-        Title="Шульте"
-       >
+        MinHeight="650" MinWidth="1170" SizeChanged="Window_SizeChanged">
     <Window.Resources>
         <ResourceDictionary >
 
             <!--<ResourceDictionary.MergedDictionaries >
                 <ResourceDictionary Source="Resources/Dictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>-->
-            
-            <Style  x:Key="baseStyle" TargetType="{x:Type Border}">
-            <Setter Property="Margin" Value="3" ></Setter>
-            <Setter Property="BorderThickness" Value="0,0,0,6"></Setter>
-            <Setter Property="Background" Value="#FFD854AE"></Setter>
-            <Setter Property="BorderBrush" Value="DarkViolet"></Setter>
-            <Setter Property="TextBlock.FontSize" Value="25"></Setter>
-            <Setter Property="CornerRadius" Value="8"></Setter>
 
-            <Setter Property="TextBlock.FontWeight" Value="Bold"></Setter>
-            <Setter Property="TextBlock.Foreground" Value="Black"></Setter>
-            <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
-            <Setter Property="TextBlock.HorizontalAlignment" Value="Stretch"></Setter>
-        </Style>
-       
-        
-        <Style x:Key="pressAnimStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource baseStyle}"  >
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="MouseDown" >
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ThicknessAnimation To="0"
+            <Style  x:Key="baseStyle" TargetType="{x:Type Border}">
+                <Setter Property="Margin" Value="3" ></Setter>
+                <Setter Property="BorderThickness" Value="0,0,0,6"></Setter>
+                <Setter Property="Background" Value="#FFD854AE"></Setter>
+                <Setter Property="BorderBrush" Value="DarkViolet"></Setter>
+                <Setter Property="TextBlock.FontSize" Value="25"></Setter>
+                <Setter Property="CornerRadius" Value="8"></Setter>
+
+                <Setter Property="TextBlock.FontWeight" Value="Bold"></Setter>
+                <Setter Property="TextBlock.Foreground" Value="Black"></Setter>
+                <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Stretch"></Setter>
+            </Style>
+
+
+            <Style x:Key="pressAnimStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource baseStyle}"  >
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="MouseDown" >
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ThicknessAnimation To="0"
                                                     Storyboard.TargetProperty="BorderThickness"
                                                     Duration="0:0:0.1"/>
-                                <ThicknessAnimation To="20,9,20,10"
+                                    <ThicknessAnimation To="20,9,20,10"
                                                     Storyboard.TargetProperty="Margin"
                                                     Duration="0:0:0.1"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="MouseUp">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard >
-                                <ThicknessAnimation To="0,0,0,6"
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseUp">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard >
+                                    <ThicknessAnimation To="0,0,0,6"
                                                     BeginTime="0:0:0.1"
                                                     Storyboard.TargetProperty="BorderThickness"
                                                     Duration="0:0:0.1"/>
-                                <ThicknessAnimation To="20,0,20,10"
+                                    <ThicknessAnimation To="20,0,20,10"
                                                     Storyboard.TargetProperty="Margin"
                                                     Duration="0:0:0.1" 
                                                      />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-            </Style.Triggers>
-        </Style>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Style.Triggers>
+            </Style>
 
-        <!--<Style x:Key="pressStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource baseStyle}"  >
+            <!--<Style x:Key="pressStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource baseStyle}"  >
             <EventSetter Event="MouseDown" Handler="Border_MouseDown"/>
             <Style.Triggers>
                 
@@ -135,13 +132,13 @@
             </Style.Triggers>
         </Style>-->
 
-        
+
         </ResourceDictionary>
     </Window.Resources>
 
     <!--<Grid Background="#FF51004A" >-->
 
-        <!--<Grid.ColumnDefinitions>
+    <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="380*"/>
             <ColumnDefinition Width="380*"/>
             <ColumnDefinition Width="30*"/>
@@ -157,7 +154,9 @@
         </Grid.RowDefinitions>
         <Image  Grid.Row="1" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/timer.png" />
         <TextBlock x:Name="timer" Grid.Row="2" Text="00:00" FontSize="30" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        --><!--<Button Template="{StaticResource btnTemplate }" ></Button>--><!--
+        -->
+    <!--<Button Template="{StaticResource btnTemplate }" ></Button>-->
+    <!--
         <UniformGrid Grid.Row="3" Rows="4">
             <Border x:Name="restartBtn"  Style="{StaticResource pressAnimStyle}" MouseDown="Restart_MouseDown" Margin="20, 0 ,20, 10" >
                 <TextBlock VerticalAlignment="Center">Restart</TextBlock>
@@ -199,7 +198,7 @@
         <ProgressBar x:Name="bar" Grid.Row="4" Grid.Column=" 1" Margin="0, 20, 0 , 20" Foreground="#FFB80CC9" BorderBrush="Black" Background="White"/>
 
     </Grid>-->
-        <Grid>
+    <Grid>
         <Frame x:Name="MainWindowFrame" NavigationUIVisibility="Hidden" Source="MainMenu.xaml" />
     </Grid>
 

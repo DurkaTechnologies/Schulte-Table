@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:sys="clr-namespace:System;assembly=mscorlib"
       xmlns:local="clr-namespace:Schulte"
       xmlns:uc="clr-namespace:Schulte.UserControls"
       mc:Ignorable="d"   
@@ -14,13 +13,11 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Dictionary.xaml" />
+                <ResourceDictionary Source="Resources/LostAndWinStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <TranslateTransform x:Key="RightTransform" X="100"></TranslateTransform>
-            <TranslateTransform x:Key="LeftTransform" X="-100"></TranslateTransform>
-            <sys:Int32 x:Key="StartPositionLeft" >-100</sys:Int32>
-            <sys:Int32 x:Key="StartPositionRight" >100</sys:Int32>
-            
-            <Style  TargetType="{x:Type uc:RoundButton}" BasedOn="{StaticResource roundBtnStyle}">
+
+
+            <Style TargetType="{x:Type uc:RoundButton}" BasedOn="{StaticResource roundBtnStyle}">
                 <Setter Property="Margin" Value="20, 8, 20, 8"></Setter>
                 <Setter Property="Grid.Column" Value="1"/>
                 <Style.Triggers>
@@ -31,8 +28,8 @@
                                     <DoubleAnimation 
                                     Storyboard.TargetProperty="(uc:RoundButton.RenderTransform).(TranslateTransform.X)" 
                                     To="0" 
-                                    BeginTime="0:0:0.2"
-                                    Duration="0:0:0.7"  />
+                                    BeginTime="0:0:0.1"
+                                    Duration="0:0:0.4"  />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger.Actions>
@@ -55,11 +52,17 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Frame x:Name="MainFrame" Grid.RowSpan="6" Grid.ColumnSpan="3" Background="Azure"></Frame>
+        <Frame x:Name="MainFrame" Grid.RowSpan="6" Grid.ColumnSpan="3">
+            <Frame.Background>
+                <RadialGradientBrush >
+                    <GradientStop Color="#FF872E6A" Offset="0.178"/>
+                    <GradientStop Color="#FF99387A" Offset="1"/>
+                </RadialGradientBrush>
+            </Frame.Background>
+        </Frame>
 
         <uc:RoundButton Grid.Row="1" Content="Time+" Command="{Binding StartGamePlusCommand}" RenderTransform="{StaticResource RightTransform}"/>
-
-        <uc:RoundButton Grid.Row="2" Content="Time-" RenderTransform="{StaticResource LeftTransform}"/>
+        <uc:RoundButton Grid.Row="2" Content="Time-" Command="{Binding StartGameMinusCommand}" RenderTransform="{StaticResource LeftTransform}"/>
         <uc:RoundButton Grid.Row="3" Content="Statistic" RenderTransform="{StaticResource RightTransform}"/>
         <uc:RoundButton Grid.Row="4" Content="About this" RenderTransform="{StaticResource LeftTransform}"/>
     </Grid>
