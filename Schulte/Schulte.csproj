@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -68,8 +69,6 @@
     <Compile Include="StatisticPage.xaml.cs">
       <DependentUpon>StatisticPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ImageButton.cs" />
-    <Compile Include="UserControls\ScoreBlock.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
@@ -81,15 +80,26 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\EnumToBooleanConverter.cs" />
+    <Compile Include="UserControls\GameOverPage.xaml.cs">
+      <DependentUpon>GameOverPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ImageButton.cs" />
     <Compile Include="UserControls\RoundButton.cs" />
+    <Compile Include="UserControls\ScoreBlock.cs" />
     <Compile Include="UserControls\Tile.cs" />
+    <Compile Include="UserControls\WinPage.xaml.cs">
+      <DependentUpon>WinPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\GamePageViewModel.cs" />
     <Compile Include="ViewModels\IViewModelsResolver.cs" />
     <Compile Include="ViewModels\MainMenuModel.cs" />
     <Compile Include="ViewModels\ViewModelsResolver.cs" />
     <Compile Include="Views\GameView.cs" />
+    <Compile Include="Views\ResourcesParser.cs" />
     <Compile Include="Views\Time.cs" />
+    <Compile Include="Views\TimeResolver.cs" />
     <Page Include="AboutPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -118,6 +128,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\LostAndWinStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\TileDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="StatisticPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -125,6 +143,14 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\GameOverPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="UserControls\WinPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +195,9 @@
     <Resource Include="Resources\faviconLeave.png" />
     <Resource Include="Resources\faviconRestartEnter.png" />
     <Resource Include="Resources\faviconRestartLeave.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eyeEnter.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
