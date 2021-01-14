@@ -8,56 +8,115 @@ using System.Threading.Tasks;
 
 namespace Schulte.Views
 {
-	public class Time : INotifyPropertyChanged
+	public class Time
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
+		private int seconds;
+		private int minutes;
+
+		private readonly int MaxSecondValue = 59;
+		private readonly int MinSecondValue = 0;
+		private readonly int MaxMinuteValue = 59;
+		private readonly int MinMinuteValue = 0;
+
 		public Time()
 		{
-			Seconds = 0;
-			Minutes = 0;
-			Text = "00:00";
+			ResetTime();
 		}
 
 		public Time(int seconds, int minutes)
 		{
 			Seconds = seconds;
 			Minutes = minutes;
-			Text = "00:00";
 		}
-		
+
+		public Time(TimeSpan time)
+		{
+			Seconds = time.Seconds;
+			Minutes = time.Minutes;
+		}
+
 		public void ResetTime()
 		{
-			Seconds = 0;
-			Minutes = 0;
-			Text = "00:00";
+			Seconds = MinSecondValue;
+			Minutes = MinMinuteValue;
 		}
-		public bool IsReset()
+
+		public bool IsReset => (Seconds == MinSecondValue) && (Minutes == MinMinuteValue);
+
+		public int Seconds 
+		{ 
+			get => seconds; 
+			set
+			{
+				if (value >= MinSecondValue && value <= MaxSecondValue)
+				{
+					seconds = value;
+					UpdateTimeString();
+				}
+			}
+		}
+
+		public int Minutes 
 		{
-			return ((Seconds == 0) && (Minutes == 0));
+			get => minutes;
+			set
+			{
+				if (value >= MinMinuteValue && value <= MaxMinuteValue)
+				{
+					minutes = value;
+					UpdateTimeString();
+				}
+			}
 		}
-		public int Seconds { get; set; }
-		public int Minutes { get; set; }
+
 		public string Text { get; set; }
 
 		public void AddSecond()
 		{
-			++Seconds;
-			if (Seconds % 60 == 0)
+			if (Seconds == MaxSecondValue)
 			{
-				Minutes++;
-				Seconds = 0;
-				Text = (Minutes < 10 ? $"0{Minutes}" : $"{Minutes}") + ":00";
+				if (Minutes != MaxMinuteValue)
+					Minutes++;
+				else
+					Minutes = MinMinuteValue;
+				Seconds = MinSecondValue;
+
 			}
 			else
-				Text = (Minutes < 10 ? $"0{Minutes}" : $"{Minutes}") + ':'
-					+ (Seconds < 10 ? $"0{Seconds}" : $"{Seconds}");
-
+				Seconds++;
 		}
 
-		public override string ToString()
+		public void MinusSecond()
 		{
-			return Text;
+			if (Seconds == MinSecondValue)
+			{
+				if (Minutes != MinMinuteValue)
+				{
+					Minutes--;
+					Seconds = MaxSecondValue;
+				}
+			}
+			else
+				Seconds--;
 		}
+
+		public bool TimeIsReset => (Seconds == 0) && (Minutes == 0);
+
+		public void SetTime(int minutes, int seconds)
+		{
+			Seconds = seconds;
+			Minutes = minutes;
+
+		}
+
+		public void SetTime(TimeSpan time)
+		{
+			Seconds = time.Seconds;
+			Minutes = time.Minutes;
+		}
+
+		public override string ToString() => Text;
+
 		public static bool operator <=(Time left, Time right)
 		{
 			if (left.Minutes < right.Minutes)
@@ -66,8 +125,8 @@ namespace Schulte.Views
 				return left.Seconds <= right.Seconds;
 			else
 				return false;
-
 		}
+
 		public static bool operator >=(Time left, Time right)
 		{
 			if (left.Minutes > right.Minutes)
@@ -76,13 +135,15 @@ namespace Schulte.Views
 				return left.Seconds >= right.Seconds;
 			else
 				return false;
-
 		}
 
-		protected void OnPropertyChanged([CallerMemberName] string name = null)
+		private void UpdateTimeString()
 		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+			if (Seconds == MinSecondValue)
+				Text = (Minutes < 10 ? $"0{Minutes}" : $"{Minutes}") + ":00";
+			else
+				Text = (Minutes < 10 ? $"0{Minutes}" : $"{Minutes}") + ':'
+					+ (Seconds < 10 ? $"0{Seconds}" : $"{Seconds}");
 		}
-
 	}
 }

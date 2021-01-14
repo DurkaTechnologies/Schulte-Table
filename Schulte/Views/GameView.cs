@@ -20,25 +20,22 @@ namespace Schulte.Views
 {
 	class GameView : INotifyPropertyChanged
 	{
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
 		private ICollection<RoundButton> tileCollection;
 		private int size;
-		private Int32Point center;
+		private int center;
 		Random random;
+		ImageButton centerElement;
+		IEnumerable<Style> styles;
 
 		private GameView()
 		{
 			random = new Random();
-			FillGrid();
-
+			CreateCenterElement();
+			styles = ResourcesParser.GetStylesFromResourcesDictionary("pack://application:,,,/Resources/TileDictionary.xaml");
 			PropertyChanged += (sender, args) =>
 			{
 				if (args.PropertyName == nameof(Size))
-				{
 					FillGrid();
-				}
 			};
 		}
 
@@ -57,18 +54,18 @@ namespace Schulte.Views
 			Tile tile;
 			int quantityTiles = (size * size);
 			List<int> numbers = GenarateNumbers(quantityTiles);
-		
+			int stylesQuantity = styles.Count();
 			ICollection<RoundButton> tempCollection = new ObservableCollection<RoundButton> { };
-			int center = (int)Math.Round((float)((size * size) / 2.0), MidpointRounding.AwayFromZero) -1;
+			CountCenter();
 			for (int i = 0; i < quantityTiles; i++)
 			{
 				tile = new Tile();
 				if (i == center)
 				{
-					SetCenterElement(ref tempCollection);
+					tempCollection.Add(centerElement);
 					continue;
 				}
-
+				tile.Style = styles.ElementAt(0);
 				number = numbers[random.Next(0, numbers.Count)];
 				tile.Number = number;
 				numbers.Remove(number);
@@ -100,20 +97,47 @@ namespace Schulte.Views
 			}
 		}
 
-		private void SetCenterElement(ref ICollection<RoundButton> collection )
+		private void CreateCenterElement()
 		{
-			ImageButton centerTile = new ImageButton();
-			var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(Resource.eye.GetHbitmap(),
-					  IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-			centerTile.LeaveImage = bitmapSource;
-			centerTile.IsEnabled = false;
-			collection.Add(centerTile);
+			if (centerElement == null)
+			{
+				centerElement = new ImageButton();
+				var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(Resource.eye.GetHbitmap(),
+						  IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+				centerElement.LeaveImage = bitmapSource;
+
+				bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(Resource.eyeEnter.GetHbitmap(),
+						  IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+				centerElement.EnterImage = bitmapSource;
+			}
 		}
 
 		public void CountCenter()
 		{
-			int position = size - size / 2;
-			center = new Int32Point(position - 1, position - 1);
+			center = (int)Math.Round((float)((size * size) / 2.0), MidpointRounding.AwayFromZero) - 1;
+		}
+
+		public void SetSchulteMode()
+		{
+			int stylesQuantity = styles.Count();
+			int quantityTiles = (size * size);
+			for (int i = 0; i < quantityTiles; i++)
+			{
+				if (i == center)
+					continue;
+				TileCollection.ElementAt(i).Style = styles.ElementAt(random.Next(0, stylesQuantity));
+			}
+		}
+
+		public void SetDefaultMode()
+		{
+			int quantityTiles = (size * size);
+			for (int i = 0; i < quantityTiles; i++)
+			{
+				if (i == center)
+					continue;
+				TileCollection.ElementAt(i).Style = styles.ElementAt(0);
+			}
 		}
 
 		public List<int> GenarateNumbers(int quantity)
@@ -124,6 +148,8 @@ namespace Schulte.Views
 
 			return numbers;
 		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		protected void OnPropertyChanged([CallerMemberName] string name = null)
 		{
