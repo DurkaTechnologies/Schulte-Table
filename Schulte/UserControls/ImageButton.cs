@@ -15,7 +15,6 @@ using System.Windows.Shapes;
 
 namespace Schulte.UserControls
 {
-
 	public class ImageButton : RoundButton
 	{
 		public static DependencyProperty EnterImageProperty;
@@ -25,6 +24,7 @@ namespace Schulte.UserControls
 		{
 			EnterImageProperty = DependencyProperty.Register("EnterImage", typeof(ImageSource), typeof(ImageButton),
 				new FrameworkPropertyMetadata(null));
+
 			LeaveImageProperty = DependencyProperty.Register("LeaveImage", typeof(ImageSource), typeof(ImageButton),
 				new FrameworkPropertyMetadata(null));
 

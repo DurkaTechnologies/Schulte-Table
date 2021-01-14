@@ -1,7 +1,9 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,30 +18,51 @@ using System.Windows.Shapes;
 
 namespace Schulte.UserControls
 {
-	public class RoundButton : Button
+	public enum PressType
+	{
+		None,
+		Correct,
+		Incorrect,
+	}
+
+	public class RoundButton : Button, INotifyPropertyChanged
 	{
 		public static DependencyProperty ButtonThicknessProperty;
 		public static DependencyProperty BorderStyleProperty;
 		public static DependencyProperty BorderMarginProperty;
 		public static DependencyProperty ButtonRadiusProperty;
+		public static DependencyProperty IsCorrectPressProperty;
+		public static DependencyProperty SecondBackgroundProperty;
+		public static DependencyProperty SecondBorderBrushProperty;
 
 		static RoundButton()
 		{
-			// Регистрация свойств зависимости
 			ButtonThicknessProperty = DependencyProperty.Register("ButtonThickness", typeof(Thickness), typeof(RoundButton),
-				new FrameworkPropertyMetadata(new Thickness(0,0,0,8)));
+				new FrameworkPropertyMetadata(new Thickness(0, 0, 0, 8)));
+
 			BorderMarginProperty = DependencyProperty.Register("BorderMargin", typeof(Thickness), typeof(RoundButton),
 				new FrameworkPropertyMetadata(new Thickness(0)));
+
 			ButtonRadiusProperty = DependencyProperty.Register("ButtonRadius", typeof(CornerRadius), typeof(RoundButton),
 				new FrameworkPropertyMetadata(new CornerRadius(8)));
+
 			BorderStyleProperty = DependencyProperty.Register("BorderStyle", typeof(Style), typeof(RoundButton),
 				new FrameworkPropertyMetadata(new Style(typeof(Border))));
+
+			IsCorrectPressProperty = DependencyProperty.Register("IsCorrectPress", typeof(PressType), typeof(RoundButton),
+				new FrameworkPropertyMetadata(PressType.None));
+
+			SecondBackgroundProperty = DependencyProperty.Register("SecondBackground", typeof(SolidColorBrush), typeof(RoundButton),
+				new FrameworkPropertyMetadata(null));
+
+			SecondBorderBrushProperty = DependencyProperty.Register("SecondBorderBrush", typeof(Brush), typeof(RoundButton),
+				new FrameworkPropertyMetadata(null));
 
 			DefaultStyleKeyProperty.OverrideMetadata(typeof(RoundButton), new FrameworkPropertyMetadata(typeof(RoundButton)));
 		}
 
-		public Thickness ButtonThickness 
-		{ 
+		public Thickness ButtonThickness
+		{
 			get => (Thickness)GetValue(BorderThicknessProperty);
 			set => SetValue(BorderThicknessProperty, value);
 		}
@@ -55,10 +78,40 @@ namespace Schulte.UserControls
 			get => (Thickness)GetValue(BorderMarginProperty);
 			set => SetValue(BorderMarginProperty, value);
 		}
+
 		public CornerRadius ButtonRadius
 		{
 			get => (CornerRadius)GetValue(ButtonRadiusProperty);
 			set => SetValue(ButtonRadiusProperty, value);
+		}
+
+		public PressType? IsCorrectPress
+		{
+			get => (PressType)GetValue(IsCorrectPressProperty);
+			set
+			{
+				SetValue(IsCorrectPressProperty, value);
+				OnPropertyChanged();
+			}
+		}
+
+		public SolidColorBrush SecondBackground
+		{
+			get => (SolidColorBrush)GetValue(SecondBackgroundProperty);
+			set => SetValue(SecondBackgroundProperty, value);
+		}
+
+		public Brush SecondBorderBrush
+		{
+			get => (Brush)GetValue(SecondBorderBrushProperty);
+			set => SetValue(SecondBorderBrushProperty, value);
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected void OnPropertyChanged([CallerMemberName] string name = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 	}
 }
